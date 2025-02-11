@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>图片上写文字</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        .image-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .image-container img {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+
+        .image-text {
+            position: absolute;
+            /*transform: translate(-50%, -50%);*/
+            font-weight: bold;
+            /*text-align: center;*/
+            /*background-color: rgba(0, 0, 0, 0.5); !* 半透明背景 *!*/
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        @font-face {
+            font-family: 'HanYiZhongXiuJianM';
+            src: url('https://kkb-b2b2c.oss-cn-beijing.aliyuncs.com/c79bf0c041e57d9bc0b9f4efb55890b2.ttf') format('truetype');
+            /* 如果有其他格式的字体文件，可以继续添加 */
+            /* src: url('path/to/your/font/HanYiZhongXiuJianM.woff') format('woff'); */
+            font-weight: bold;
+            font-style: normal;
+        }
+    </style>
+</head>
+<body style="margin: 0">
+
+<div class="image-container" id="capture">
+    <img src="https://kkb-b2b2c.oss-cn-beijing.aliyuncs.com/2528.jpg" alt="示例图片">
+    <div style="position: absolute;top: 13%;width: 86%;height: 24%;margin: 0 8% 0 7%;display: flex;align-items: center;justify-content: center;">
+        <h2 id="showTitle" class="image-text" style="margin: 0; padding: 0;font-size: 35px;font-family: 'HanYiZhongXiuJianM', sans-serif, serif;">标题</h2>
+    </div>
+    <p id="showActor" class="image-text" style="top: 26%;left: 62%;font-size: 18px;font-weight: 300;">作者</p>
+    <p id="showContent" class="image-text" style="top: 40%;margin: 2% 7% 1% 6%;font-size: 20px;font-weight: 300;">内容</p>
+    <p class="image-text" style="top: 53%;left: 2%;font-size: 20px;font-weight: 300;">【释义】</p>
+    <p id="showShiyi" class="image-text" style="width: 80%; top: 58%;left: 6%;font-size: 18px;font-weight: 300;">释义内容</p>
+</div>
+
+<br>
+<div style="margin:0 auto; height: 40% ;text-align: center;">
+    <button type="button" onclick="generate()">生成</button>
+    <!--        <button type="button" onclick="previewContent()">预览</button>-->
+    <button type="button" onclick="clearCache()">清除缓存</button>
+    <button  onclick="capture()">截图</button>
+</div>
+
+<form id="inputForm">
+    <label for="title">标题:</label><br>
+    <input style="width: 96%" type="text" id="title" name="title"><br>
+
+    <label for="actor">作者:</label><br>
+    <input style="width: 96%" type="text" id="actor" name="actor" ><br>
+
+    <label for="content">内容:</label><br>
+    <textarea style="width: 96%"  id="content" name="content" rows="4" cols="50"></textarea><br>
+
+    <label for="shiyi">释义:</label><br>
+    <textarea style="width: 96%"  id="shiyi" name="shiyi" rows="4" cols="50"></textarea><br>
+</form>
+
+<script>
+    // 清除缓存
+    function clearCache() {
+        localStorage.setItem('previewTitle', "标题");
+        localStorage.setItem('previewActor', "作者");
+        localStorage.setItem('previewContent', "内容");
+        localStorage.setItem('previewShiyi', "释义");
+    }
+    // 保存数据并生成
+    function generate() {
+        const title = document.getElementById('title').value||"标题";
+        const actor = document.getElementById('actor').value||"作者";
+        const content = document.getElementById('content').value||"内容";
+        const shiyi = document.getElementById('shiyi').value||"释义";
+
+        localStorage.setItem('previewTitle', title);
+        localStorage.setItem('previewActor', actor);
+        localStorage.setItem('previewContent', content);
+        localStorage.setItem('previewShiyi', shiyi);
+        show();
+    }
+
+    // 展示
+    function show() {
+        document.getElementById('showTitle').outerHTML='<h2 id="showTitle" class="image-text" style="margin: 0; padding: 0;font-size: 35px;font-family: \'HanYiZhongXiuJianM\', sans-serif, serif;">'+localStorage.getItem('previewTitle')||"标题"+'</h2>\n';
+        document.getElementById('showActor').outerHTML = '<p id="showActor" class="image-text" style="top: 26%;left: 62%;font-size: 18px;font-weight: 300;">'+localStorage.getItem('previewActor')||"作者"+'</p>';
+        document.getElementById('showContent').outerHTML = '<p id="showContent" class="image-text" style="top: 40%;margin: 2% 7% 1% 6%;font-size: 20px;font-weight: 300;">'+localStorage.getItem('previewContent')||"内容"+'</p>';
+        document.getElementById('showShiyi').outerHTML = '<p id="showShiyi" class="image-text" style="width: 80%; top: 58%;left: 6%;font-size: 18px;font-weight: 300;">'+localStorage.getItem('previewShiyi')||"释义内容"+'</p>\n';
+        // document.getElementById('capture').style.display = 'block';
+    }
+
+    // 页面加载时检查缓存并自动填充表单
+    window.onload = function() {
+        document.getElementById('title').value = localStorage.getItem('previewTitle');
+        document.getElementById('actor').value = localStorage.getItem('previewActor');
+        document.getElementById('content').value = localStorage.getItem('previewContent');
+        document.getElementById('shiyi').value = localStorage.getItem('previewShiyi');
+        show();
+    };
+
+    function capture() {
+        html2canvas(document.querySelector("#capture"),{
+            allowTaint: true, // 允许跨域的图片
+            useCORS: true,   // 启用跨域请求
+            letterRendering: 1,// 尝试调整字体渲染质量
+            scale: window.devicePixelRatio
+        }).then(canvas => {
+            let link = document.createElement('a');
+            link.download = 'screenshot.png';
+            link.href = canvas.toDataURL();
+            link.click();
+        });
+    }
+</script>
+</body>
+</html>
