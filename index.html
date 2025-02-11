@@ -39,7 +39,7 @@
         .basic-button {
             background-color: #007bff; /* 背景色 */
             color: white; /* 文字颜色 */
-            padding: 10px 20px; /* 内边距 */
+            padding: 10px 13px; /* 内边距 */
             border: none; /* 去掉边框 */
             border-radius: 5px; /* 圆角 */
             cursor: pointer; /* 鼠标指针 */
@@ -55,22 +55,43 @@
 
 <div class="image-container" id="capture">
     <img src="https://kkb-b2b2c.oss-cn-beijing.aliyuncs.com/2528.jpg" alt="示例图片">
-    <div style="position: absolute;top: 13%;width: 86%;height: 24%;margin: 0 8% 0 7%;display: flex;align-items: center;">
-        <h2 id="showTitle" class="image-text" style="margin: 0; padding: 0;font-size: 35px;font-family: 'HanYiZhongXiuJianM', sans-serif, serif;">标题</h2>
+    <div style="position: absolute;top: 13%;width: 86%;height: 24%;margin: 0 8% 0 7%;">
+        <h2 id="showTitle">标题</h2>
     </div>
-    <p id="showActor" class="image-text" style="top: 26%;left: 62%;font-size: 18px;font-weight: 300;">作者</p>
-    <p id="showContent" class="image-text" style="top: 40%;margin: 2% 7% 1% 6%;font-size: 20px;font-weight: 300;">内容</p>
-    <p class="image-text" style="top: 53%;left: 2%;font-size: 20px;font-weight: 300;">【释义】</p>
-    <p id="showShiyi" class="image-text" style="width: 80%; top: 58%;left: 6%;font-size: 18px;font-weight: 300;">释义内容</p>
+    <p id="showActor" >作者</p>
+    <p id="showContent" >内容</p>
+    <div id="shiyiDiv" style="top: 58%;position: absolute;width: 80%;height: 30%">
+        <p class="image-text" style="top: 1%;left: 2%;font-size: 20px;font-weight: 300;margin:0;padding: 0">【释义】</p>
+        <p id="showShiyi" >释义内容</p>
+    </div>
 </div>
 
 <br>
+
+
+
 <div style="margin:0 auto; height: 40% ;text-align: center;">
-    <button class="basic-button" type="button" onclick="generate()">生成</button>
-    <button class="basic-button" type="button" onclick="clearCache()">清除缓存</button>
+    <div class="controls">
+        <label>
+            <input type="radio" name="element" value="showTitle"> 标题
+        </label>
+        <label>
+            <input type="radio" name="element" value="showActor"> 作者
+        </label>
+        <label>
+            <input type="radio" name="element" value="showContent"> 内容
+        </label>
+        <label>
+            <input type="radio" name="element" value="shiyiDiv"> 释义
+        </label>
+    </div>
+    <button class="basic-button" onclick="vertical(-3)">上</button>
+    <button class="basic-button" onclick="vertical(3)">下</button>
+    <button class="basic-button" onclick="Level(-1)">左</button>
+    <button class="basic-button" onclick="Level(1)">右</button>
+    <button class="basic-button" type="button" onclick="generate()">保存</button>
+    <button class="basic-button" type="button" onclick="clearCache()">重置</button>
     <button class="basic-button" onclick="capture()">截图</button>
-    <button class="basic-button" onclick="add(1)">加</button>
-    <button class="basic-button" onclick="add(-1)">减</button>
 </div>
 
 <form id="inputForm">
@@ -89,21 +110,45 @@
 </form>
 
 <script>
-    // 调整标题左边距
-    function add(value) {
-        const left = parseInt(localStorage.getItem('left')||0)+value;
-        localStorage.setItem('left', left);
-        let style = document.getElementById('showTitle').style;
-        console.log(left)
-        style.left=left+'%';
+    // 获取单选框
+    const radios = document.querySelectorAll('input[name="element"]');
+    // 当前选中的元素
+    let selectedElement;
+    // 监听单选框变化
+    radios.forEach(radio => {
+        radio.addEventListener('change', function() {
+            selectedElement = document.getElementById(this.value);
+        });
+    });
+
+    // 调整左边距
+    function Level(value) {
+        if (!selectedElement){
+            selectedElement = document.getElementById('showTitle')
+        }
+        const currentLeft = parseInt(selectedElement.style.left) || 0;
+        selectedElement.style.left = `${currentLeft + value}%`;
+        localStorage.setItem(selectedElement.id+'left', currentLeft + value);
     }
+
+    // 调整上边距
+    function vertical(value) {
+        if (!selectedElement){
+            selectedElement = document.getElementById('showTitle')
+        }
+        const currentTop = parseInt(selectedElement.style.top) || 0;
+        selectedElement.style.top = `${currentTop + value}%`;
+        localStorage.setItem(selectedElement.id+'top', currentTop + value);
+    }
+
     // 清除缓存
     function clearCache() {
-        localStorage.setItem('previewTitle', "标题");
-        localStorage.setItem('previewActor', "作者");
-        localStorage.setItem('previewContent', "内容");
-        localStorage.setItem('previewShiyi', "释义");
-        localStorage.setItem('left', "0");
+        // localStorage.setItem('previewTitle', "标题");
+        // localStorage.setItem('previewActor', "作者");
+        // localStorage.setItem('previewContent', "内容");
+        // localStorage.setItem('previewShiyi', "释义");
+        localStorage.clear()
+        generate();
     }
     // 保存数据并生成
     function generate() {
@@ -121,11 +166,20 @@
 
     // 展示
     function show() {
-        document.getElementById('showTitle').outerHTML='<h2 id="showTitle" class="image-text" style="margin: 0; padding: 0;font-size: 35px;font-family: \'HanYiZhongXiuJianM\', sans-serif, serif;">&nbsp;'+localStorage.getItem('previewTitle')||"标题"+'</h2>\n';
+        document.getElementById('showTitle').outerHTML='<h2 id="showTitle" class="image-text" style="top:27%; margin: 0; padding: 0;font-size: 35px;font-family: \'HanYiZhongXiuJianM\', sans-serif, serif;">'+localStorage.getItem('previewTitle') || "标题"+'</h2>\n';
         document.getElementById('showActor').outerHTML = '<p id="showActor" class="image-text" style="top: 26%;left: 62%;font-size: 18px;font-weight: 300;">'+localStorage.getItem('previewActor')||"作者"+'</p>';
         document.getElementById('showContent').outerHTML = '<p id="showContent" class="image-text" style="top: 40%;margin: 2% 7% 1% 6%;font-size: 20px;font-weight: 300;">'+localStorage.getItem('previewContent')||"内容"+'</p>';
-        document.getElementById('showShiyi').outerHTML = '<p id="showShiyi" class="image-text" style="width: 80%; top: 58%;left: 6%;font-size: 18px;font-weight: 300;">'+localStorage.getItem('previewShiyi')||"释义内容"+'</p>\n';
+        document.getElementById('showShiyi').outerHTML = '<p id="showShiyi" class="image-text" style="width: 80%; top: 4%;left: 6%;font-size: 18px;font-weight: 300;">'+localStorage.getItem('previewShiyi')||"释义内容"+'</p>\n';
         // document.getElementById('capture').style.display = 'block';
+
+        document.getElementById('showTitle').style.left=`${parseInt(localStorage.getItem("showTitleleft"))}%`;
+        document.getElementById('showTitle').style.top=`${parseInt(localStorage.getItem("showTitletop"))}%`;
+        document.getElementById('showActor').style.left=`${parseInt(localStorage.getItem("showActorleft"))}%`;
+        document.getElementById('showActor').style.top=`${parseInt(localStorage.getItem("showActortop"))}%`;
+        document.getElementById('showContent').style.left=`${parseInt(localStorage.getItem("showContentleft"))}%`;
+        document.getElementById('showContent').style.top=`${parseInt(localStorage.getItem("showContenttop"))}%`;
+        document.getElementById('shiyiDiv').style.left=`${parseInt(localStorage.getItem("shiyiDivleft"))}%`;
+        document.getElementById('shiyiDiv').style.top=`${parseInt(localStorage.getItem("shiyiDivtop"))}%`;
     }
 
     // 页面加载时检查缓存并自动填充表单
