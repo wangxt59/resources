@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>图片上写文字</title>
+    <title>index</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         .image-container {
@@ -169,7 +169,7 @@
         document.getElementById('showTitle').outerHTML='<h2 id="showTitle" class="image-text" style="top:27%; margin: 0; padding: 0;font-size: 35px;font-family: \'HanYiZhongXiuJianM\', sans-serif, serif;">'+localStorage.getItem('previewTitle') || "标题"+'</h2>\n';
         document.getElementById('showActor').outerHTML = '<p id="showActor" class="image-text" style="top: 26%;left: 62%;font-size: 18px;font-weight: 300;">'+localStorage.getItem('previewActor')||"作者"+'</p>';
         document.getElementById('showContent').outerHTML = '<p id="showContent" class="image-text" style="top: 40%;margin: 2% 7% 1% 6%;font-size: 20px;font-weight: 300;">'+localStorage.getItem('previewContent')||"内容"+'</p>';
-        document.getElementById('showShiyi').outerHTML = '<p id="showShiyi" class="image-text" style="width: 100%; top: 4%;left: 6%;font-size: 18px;font-weight: 300;">'+localStorage.getItem('previewShiyi')||"释义内容"+'</p>\n';
+        document.getElementById('showShiyi').outerHTML = '<p id="showShiyi" class="image-text" style="line-height:1.8;width: 100%; top: 4%;left: 6%;font-size: 18px;font-weight: 300;">'+localStorage.getItem('previewShiyi')||"释义内容"+'</p>\n';
         // document.getElementById('capture').style.display = 'block';
 
         document.getElementById('showTitle').style.left=`${parseInt(localStorage.getItem("showTitleleft"))}%`;
