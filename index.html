@@ -60,7 +60,7 @@
     </div>
     <p id="showActor" >作者</p>
     <p id="showContent" >内容</p>
-    <div id="shiyiDiv" style="top: 58%;position: absolute;width: 80%;height: 30%">
+    <div id="shiyiDiv" style="top: 58%;position: absolute;width: 82%;height: 30%">
         <p class="image-text" style="top: 1%;left: 2%;font-size: 20px;font-weight: 300;margin:0;padding: 0">【释义】</p>
         <p id="showShiyi" >释义内容</p>
     </div>
@@ -169,7 +169,7 @@
         document.getElementById('showTitle').outerHTML='<h2 id="showTitle" class="image-text" style="top:27%; margin: 0; padding: 0;font-size: 35px;font-family: \'HanYiZhongXiuJianM\', sans-serif, serif;">'+localStorage.getItem('previewTitle') || "标题"+'</h2>\n';
         document.getElementById('showActor').outerHTML = '<p id="showActor" class="image-text" style="top: 26%;left: 62%;font-size: 18px;font-weight: 300;">'+localStorage.getItem('previewActor')||"作者"+'</p>';
         document.getElementById('showContent').outerHTML = '<p id="showContent" class="image-text" style="top: 40%;margin: 2% 7% 1% 6%;font-size: 20px;font-weight: 300;">'+localStorage.getItem('previewContent')||"内容"+'</p>';
-        document.getElementById('showShiyi').outerHTML = '<p id="showShiyi" class="image-text" style="width: 80%; top: 4%;left: 6%;font-size: 18px;font-weight: 300;">'+localStorage.getItem('previewShiyi')||"释义内容"+'</p>\n';
+        document.getElementById('showShiyi').outerHTML = '<p id="showShiyi" class="image-text" style="width: 100%; top: 4%;left: 6%;font-size: 18px;font-weight: 300;">'+localStorage.getItem('previewShiyi')||"释义内容"+'</p>\n';
         // document.getElementById('capture').style.display = 'block';
 
         document.getElementById('showTitle').style.left=`${parseInt(localStorage.getItem("showTitleleft"))}%`;
